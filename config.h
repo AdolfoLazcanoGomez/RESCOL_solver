@@ -51,6 +51,7 @@ struct ACOArgs : public argparse::Args
     // Limitador
     bool &limitador = flag("usar-limitador", "usa el limitador de pasadas");
     int &valor_limitador = kwarg("valor-limitador", "cantidad limite de veces que se puede pasar por un arco").set_default(4);
+    std::string &archivo_multiplicidades = kwarg("archivo-multiplicidades", "Ruta del archivo de multiplicidades por arco").set_default("");
     
     // Uso de modo sin mejora de las calles
     //int &UsaLimiteDeMejoras = kwarg("usar-sin-nuevos-visitas", "Usar el limite sin nuevas calles").set_default(4);

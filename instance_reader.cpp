@@ -13,6 +13,44 @@
 
 using namespace std;
 
+int valor_limitador_global = 0;
+
+void leer_multiplicidad_arcos(const std::string& ruta, Graph& g)
+{
+    std::ifstream infile(ruta);
+    if (!infile)
+    {
+        std::cerr << "No se pudo abrir el archivo de multiplicidades: " << ruta << std::endl;
+        return;
+    }
+
+    std::string linea;
+    // Ignorar encabezado (dos primeras líneas)
+    std::getline(infile, linea);
+    std::getline(infile, linea);
+
+    int origen, destino, limite;
+    while (std::getline(infile, linea))
+    {
+        if (linea.empty())
+            continue;
+        std::istringstream ss(linea);
+        if (!(ss >> origen >> destino >> limite))
+            continue;
+
+        for (auto &par : g.arcos)
+        {
+            Arco *arco = par.second;
+            if (arco->origen && arco->destino &&
+                arco->origen->id == origen && arco->destino->id == destino)
+            {
+                arco->limite_pasadas = limite;
+                break;
+            }
+        }
+    }
+}
+
 // Función para leer una instancia
 /* Parámetros:
     - nombre_archivo: Nombre del archivo que contiene la instancia

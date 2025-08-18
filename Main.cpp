@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <climits>
 
 using namespace std;
 
@@ -65,6 +66,8 @@ int main(int argc, char *argv[])
     } else {
         inicializar_generador(parametros_base.semilla);  
     }
+    extern int valor_limitador_global;
+    valor_limitador_global = parametros_base.limitador ? parametros_base.valor_limitador : INT_MAX;
     grafo = leerInstancia(parametros_base.nombre_instancia, config.leer_restricciones, config.leer_coordenadas);
     if (config.debug)
     {

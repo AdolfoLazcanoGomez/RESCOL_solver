@@ -14,6 +14,7 @@
 #include "aco.h"
 #include "graph.h"
 #include "helpers.h"
+#include "instance_reader.h"
 #ifdef _WIN32
 #include <io.h>
 #define access _access
@@ -45,6 +46,7 @@ using namespace std;
 */
 ACO::ACO(Graph *instancia, ACOArgs parametros_base)
 {
+    grafo = instancia;
     set_parametros(parametros_base);
     auto now = std::chrono::system_clock::now();
     std::time_t now_c = std::chrono::system_clock::to_time_t(now);
@@ -379,7 +381,8 @@ Nodo *ACO::eligeSiguiente(Hormiga &hormiga)
 
                         Arco *arco = nullptr;
                         arco = i.first;
-                        if (arco->veces_recorrida <= valor_limitador)
+                        //if (arco->veces_recorrida <= valor_limitador)
+                        if (arco->veces_recorrida < arco->limite_pasadas)
                         {
                             cantidad = hormiga.feromonas_locales[arco].cantidad;
                             if (arco->obligatoria == true){
@@ -401,7 +404,8 @@ Nodo *ACO::eligeSiguiente(Hormiga &hormiga)
                 { // si no es bidireccional, se agrega a las probabilidades de paso
                     Arco *arco = nullptr;
                     arco = i.first;
-                    if (arco->veces_recorrida <= valor_limitador)
+                    //if (arco->veces_recorrida <= valor_limitador)
+                    if (arco->veces_recorrida < arco->limite_pasadas)
                     {
 
                         cantidad = hormiga.feromonas_locales[arco].cantidad;
@@ -450,7 +454,8 @@ Nodo *ACO::eligeSiguiente(Hormiga &hormiga)
 
                         Arco *arco = nullptr;
                         arco = i.first;
-                        if (arco->veces_recorrida <= valor_limitador)
+                        //if (arco->veces_recorrida <= valor_limitador)
+                        if (arco->veces_recorrida < arco->limite_pasadas)
                         {
                         
 
@@ -477,7 +482,8 @@ Nodo *ACO::eligeSiguiente(Hormiga &hormiga)
                 { // si no es bidireccional, se agrega a las probabilidades de paso
                     Arco *arco = nullptr;
                     arco = i.first;
-                    if (arco->veces_recorrida <= valor_limitador)
+                    //if (arco->veces_recorrida <= valor_limitador)
+                    if (arco->veces_recorrida < arco->limite_pasadas)
                     {
 
                         cantidad = hormiga.feromonas_locales[arco].cantidad;
@@ -1305,13 +1311,17 @@ void ACO::set_parametros(const ACOArgs parametros_base)
         float beta_max = parametros_base.max_beta;
         oscilador.agregarParametro(beta,beta_inc,beta_min,beta_max); 
     }
+
+    
     bool usar_limitador = parametros_base.limitador;
     if (usar_limitador){
         valor_limitador = parametros_base.valor_limitador;        
     } else {
         valor_limitador = INT_MAX;
     }
-
+    if (!parametros_base.archivo_multiplicidades.empty()) {
+        leer_multiplicidad_arcos(parametros_base.archivo_multiplicidades, *grafo);
+    }
 
     
 }
