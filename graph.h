@@ -8,6 +8,9 @@
 
 using namespace std;
 
+// Valor por defecto del límite de pasadas por arco
+extern int valor_limitador_global;
+
 struct Nodo;
 struct Subnodo;
 struct Arco;
@@ -44,6 +47,7 @@ struct Arco
     double costo_recorrido = 0;         // Costo de recorrer la arista
     double costo_recoleccion = 0;       // Costo de recolectar en la arista
     int veces_recorrida = 0;            // Veces que se recorre la arista
+    int limite_pasadas = valor_limitador_global;    //Limite propio de pasadas
     bool bidireccional = 0;             // Indica si la arista es bidireccional
     bool obligatoria = true;             // Indica si la arista es bidireccional
     Arco *arco_reciproco = nullptr;     // Puntero al arco reciproco (via contraria de la misma calle)
